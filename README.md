@@ -2,7 +2,7 @@
 # Books Recommendation System
 
 ## General info
-The project concerns the books recommendation system. It includes data analysis, data preparation and explored three kind of recommendations - the simplest recommendations, content-based filtering and collaborative filtering (by KNN model and matrix factorization.) The final result will show that the user can input one book's name or author then the system can provide the other most possible books that he can to read.
+The project concerns the books recommendation system. It includes data analysis, data preparation and explored three kind of recommendations - the simplest recommendations, content-based filtering and collaborative filtering (by KNN model and matrix factorization). The final result will show that the user can input one book's name or author then the system can provide the other most possible books that he can to read.
 
 ### Dataset
 In our analysis we used two datasets come from Kaggle: [Goodreads books](https://www.kaggle.com/jealousleopard/goodreadsbooks) and [Google Books](https://www.kaggle.com/bilalyussef/google-books-dataset). 
