@@ -7,10 +7,11 @@ from sklearn.metrics.pairwise import linear_kernel
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-URL = 'C:\Python Scripts\Datasets\google_books\google_books_1299.csv'
+URL = '\Datasets\google_books\google_books_1299.csv'
 
 
 def clean_data(data):
+    '''Function to clean data'''
     data.drop(['Unnamed: 0'], axis=1, inplace=True)
     # removing duplicates
     df = data.drop_duplicates(keep=False)
@@ -21,6 +22,7 @@ def clean_data(data):
     
 
 def read_data(path):
+    '''Read and preprocess data'''
     data = pd.read_csv(path)
     df = clean_data(data)
     return df
@@ -28,10 +30,12 @@ def read_data(path):
 
 '''The recommender system based on descriptions of books by TF-IDF method'''
 
+
 def cosine_sim(df):
+    '''Function to computing the cosine similarity matrix'''
+    # creating the TF-IDF Matrix
     tfidf = TfidfVectorizer(stop_words='english')
     tfidf_matrix = tfidf.fit_transform(df['description'])
-    # Computing the cosine similarity matrix
     cosine = linear_kernel(tfidf_matrix, tfidf_matrix)
     return cosine 
 
@@ -42,7 +46,7 @@ def get_recommendations(title):
     cosine_sim1 = cosine_sim(df)
     # reverse map of indices and book titles:
     indices = pd.Series(df.index, index=df['title']).drop_duplicates()
-    # create recommendations
+    # creating recommendations
     index = indices[title]
     sim_score = list(enumerate(cosine_sim1[index]))
     sim_score = sorted(sim_score, key=lambda x: x[1], reverse=True)
@@ -55,9 +59,11 @@ def get_recommendations(title):
  
 
 def cosine_sim2(df):
+    '''Function to computing the cosine similarity matrix'''
+    # define a Count Vectorizer object
     count = CountVectorizer(stop_words='english')
     count_matrix = count.fit_transform(df['generes'])
-    # computing the Cosine Similarity matrix based on the count matrix
+    # cosine similarity matrix based on the count matrix
     cosine_sim = cosine_similarity(count_matrix, count_matrix)
     return cosine_sim
     
@@ -69,7 +75,7 @@ def get_recommendations2(title):
     # resetting index of main DataFrame and constructing reverse mapping
     df3 = df.reset_index()
     indices = pd.Series(df3.index, index=df3['title'])
-    # create recommendations
+    # creating recommendations
     index = indices[title]
     sim_score = list(enumerate(cosine_sim1[index]))
     sim_score = sorted(sim_score, key=lambda x: x[1], reverse=True)
