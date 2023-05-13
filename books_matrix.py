@@ -7,27 +7,30 @@ import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
-URL = 'C:\\Python Scripts\\Datasets\\goodreads book\\books.csv'
+URL = '\Datasets\goodreads book\books.csv'
 
 popularity_threshold = 1000
 
 
 def read_data(path):
+    '''Read the data'''
     df = pd.read_csv(path, error_bad_lines=False)
     return df
 
 
 def preparing_data():
+    '''Preparing data to modelling'''
     df = read_data(URL)
     id_rating = df[['bookID', 'average_rating', 'title', 'ratings_count']]
     # choose books which received above 1000 ratings
     id_rating2 = id_rating.query('ratings_count >= @popularity_threshold')
     # convert the table into a 2D matrix
-    id_rating_pivot = id_rating2.pivot(index = 'bookID', columns = 'title', values = 'average_rating').fillna(0)
+    id_rating_pivot = id_rating2.pivot(index='bookID', columns='title', values='average_rating').fillna(0)
     return id_rating_pivot
 
 
 def dimensionality_reduction(id_rating_pivot):
+    '''Calculating model and dimensionality reduction'''
     # transpose the matrix 
     X = id_rating_pivot.values.T
     # SVD model
@@ -39,9 +42,8 @@ def dimensionality_reduction(id_rating_pivot):
     
 
 def matrix_factorization(name):
-    """The recommendations for chosen book. 
-    The function allows to find the books that have high correlation coefficients
-    (between 0.9 and 1.0) with chosen book"""
+    """The function enables to find the books that have high correlation coefficients 
+    (between 0.9 and 1.0) with chosen book and get the recommendations for it."""
     id_rating_pivot = preparing_data()
     corr = dimensionality_reduction(id_rating_pivot)
     book_title = id_rating_pivot.columns
