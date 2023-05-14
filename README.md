@@ -13,6 +13,8 @@ The Recommendation System is based on previous (past) behaviours, it predicts th
 ## Project contains:
 - Books recommendation system by using simplest methods and content-based filtering - **books_content.ipynb**
 - Books recommendation system by using collaborative filtering - **books_colaborative_filtering.ipynb**
+- Python script with the simple recommendation system - **books_simple.py** 
+- Python script with the recommendation system by content-based filtering method - **books_content.py**  
 
 ## Summary
 The main aim of this project was build book recommendation system. Based on analysis of two datasets (Goodreads books and Google Books) I have explored three kind of recommendations: the simplest recommendations, content-based filtering and collaborative filtering (KNN model and matrix factorization). I have started with data analysis to better meet the data. Then I have cleaned data and prepared them to the modelling.
