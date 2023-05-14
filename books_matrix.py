@@ -7,7 +7,7 @@ import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
-URL = '\Datasets\goodreads book\books.csv'
+URL = '\Datasets\goodreads_book\books.csv'
 
 popularity_threshold = 1000
 

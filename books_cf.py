@@ -7,10 +7,11 @@ import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
-URL = 'C:\\Python Scripts\\Datasets\\goodreads book\\books.csv'
+URL = 'Datasets\goodreads_book\books.csv'
 
 
 def clean_data(data):
+    '''Function to clean data'''
     data['language_code'].replace(to_replace=['eng', 'en-US', 'en-GB', 'enm', 'en-CA',
                                         'fre', 'spa', 'mul', 'grc','ger',
                                         'jpn', 'ara', 'nl', 'zho','lat', 'por','srp',
@@ -28,6 +29,7 @@ def clean_data(data):
 
 
 def read_data(path):
+    '''Read and clean data'''
     data = pd.read_csv(path, error_bad_lines=False)
     df = clean_data(data) 
     return df
@@ -48,9 +50,12 @@ def create_rating(row):
 
 
 def preprocess_data(df):
+    '''Data preparation for modeling'''
     df['rating_between'] = df['average_rating'].apply(create_rating)
+    # createing two new DataFrames to assign a values 1 and 0 for chosen columns
     rating_df = pd.get_dummies(df['rating_between'])
     language_df = pd.get_dummies(df['language_code'])
+    # connection the two data frames into one 
     features = pd.concat([rating_df, 
                       language_df, 
                       df['average_rating'], 
@@ -59,8 +64,10 @@ def preprocess_data(df):
 
 
 def get_model(features):
+    '''Calculating the model'''
     scaler = MinMaxScaler()
     feature = scaler.fit_transform(features)
+    # calculating KNN model
     model = neighbors.NearestNeighbors(n_neighbors=6, algorithm='auto')
     model.fit(feature)
     distance, indices = model.kneighbors(feature)
@@ -68,7 +75,7 @@ def get_model(features):
 
 
 def make_recommendations(name):
-    """The function to get recommendations"""
+    """The function to get recommendations by name"""
     df = read_data(URL)
     features = preprocess_data(df)
     distance, indices = get_model(features)
