@@ -35,3 +35,11 @@ The project is created with:
 **Running the project:**
 
 To run this project use Jupyter Notebook or Google Colab.
+
+You can run the scripts in the terminal:
+
+    books_simple.py
+    books_content.py
+    books_cf.py
+    books_matrix.py
+
