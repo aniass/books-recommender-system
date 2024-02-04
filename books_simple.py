@@ -3,21 +3,19 @@
 import pandas as pd
 
 
-URL = '\Datasets\google_books\google_books_1299.csv'
+URL = r'Datasets\google_books\google_books_1299.csv'
 
 
 def clean_data(data):
     '''Function to clean data'''
     data.drop(['Unnamed: 0'], axis=1, inplace=True)
-    # removing duplicates
+    
+    # Remove duplicates based on 'title'
     df = data.drop_duplicates(keep=False)
     df = df.drop_duplicates(['title'], keep='first')
-    # removing commas
-    df['voters'] = df['voters'].replace(',','', regex=True)
-    # filling with 0
-    df['voters'] = df['voters'].fillna(0)
-    # changing type for int
-    df['voters'] = df['voters'].astype(int)
+    
+    # Remove commas, filling missing with 0 and convert to integer in the 'voters' column
+    df['voters'] = df['voters'].replace(',','', regex=True).fillna(0).astype(int)
     return df
     
 
@@ -28,21 +26,26 @@ def read_data(path):
     return df
 
 
-def simple_recommend(df):
+def calculate_weighted_rating(df):
     """Function to calculate a simple recommendations based on Weighted Rating"""
     C = df['rating'].mean()
     m = df['voters'].quantile(0.90)
     V = df['voters']
     R = df['rating']
-    # filtering out all qualified books into a new DataFrame
-    q_book = df.copy().loc[df['voters'] >= m]
-    # calculating the weighted rating 
-    q_book['score'] = (V/(V+m) * R) + (m/(m+V) * C)
-    q_book = q_book.sort_values('score', ascending=False)
-    # the top 15 books
-    print(q_book[['title', 'voters', 'rating', 'score']].head(10))
+    
+    # Filter out qualified books into a new DataFrame
+    q_books = df[df['voters'] >= m].copy()
+    
+    # Calculate the weighted rating
+    q_books['score'] = (V/(V+m) * R) + (m/(m+V) * C)
+    
+    # Sort the DataFrame by 'score' in descending order
+    q_books = q_books.sort_values('score', ascending=False)
+    
+    # Display the top 10 books
+    print(q_books[['title', 'voters', 'rating', 'score']].head(10))
 
 
 if __name__ == '__main__':
     data = read_data(URL)
-    simple_recommend(data)
+    calculate_weighted_rating(data)
