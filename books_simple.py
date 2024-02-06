@@ -7,7 +7,7 @@ URL = r'Datasets\google_books\google_books_1299.csv'
 
 
 def clean_data(data):
-    '''Function to clean data'''
+    '''Clean and preprocess data'''
     data.drop(['Unnamed: 0'], axis=1, inplace=True)
     
     # Remove duplicates based on 'title'
@@ -27,7 +27,7 @@ def read_data(path):
 
 
 def calculate_weighted_rating(df):
-    """Function to calculate a simple recommendations based on Weighted Rating"""
+    """Calculate weighted ratings and display top books"""
     C = df['rating'].mean()
     m = df['voters'].quantile(0.90)
     V = df['voters']
