@@ -18,8 +18,7 @@ CORRELATION_THRESHOLD_MAX = 1.0
 
 def read_data(path):
     '''Read the data'''
-    df = pd.read_csv(path, error_bad_lines=False)
-    return df
+    return pd.read_csv(path, error_bad_lines=False)
 
 
 def prepare_data(path):
@@ -50,13 +49,13 @@ def matrix_factorization(name, data_path):
     (between 0.9 and 1.0) with chosen book and get the recommendations for it."""
     id_rating_pivot = prepare_data(data_path)
     corr = dimensionality_reduction(id_rating_pivot)
-    book_title = id_rating_pivot.columns
-    book_list = list(book_title)
-    book = book_list.index(name)
-    corr_book = corr[book]
-    print("Recommended books are:\n")
-    print(list(book_title[(corr_book < CORRELATION_THRESHOLD_MAX) & (corr_book > CORRELATION_THRESHOLD_MIN)]))
-   
+    book_titles = id_rating_pivot.columns
+    book_index = book_titles.get_loc(name)
+    corr_book = corr[book_index]
+    print("Recommended books for '{}':\n".format(name))
+    recommended_books = book_titles[(corr_book < CORRELATION_THRESHOLD_MAX) & (corr_book > CORRELATION_THRESHOLD_MIN)]
+    print(recommended_books.to_list())
+
     
 if __name__ == '__main__':
     matrix_factorization("Animal Farm", URL)
