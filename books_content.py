@@ -1,22 +1,18 @@
 '''The recommendation system with content-based filtering'''
 
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import linear_kernel
-from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
 
-
-URL = '\Datasets\google_books\google_books_1299.csv'
+# Constants
+URL = r'Datasets/google_books/google_books_1299.csv'
 
 
 def clean_data(data):
-    '''Function to clean data'''
+    '''Clean and preprocess the data'''
     data.drop(['Unnamed: 0'], axis=1, inplace=True)
-    # removing duplicates
     df = data.drop_duplicates(keep=False)
     df = df.drop_duplicates(['title'], keep='first')
-    # replacing NaN with an empty string
     df['description'] = df['description'].fillna('')
     return df
     
