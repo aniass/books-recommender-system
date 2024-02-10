@@ -17,36 +17,35 @@ CORRELATION_THRESHOLD_MAX = 1.0
 
 
 def read_data(path):
-    '''Read the data'''
+    '''Read the data from CSV file'''
     return pd.read_csv(path, error_bad_lines=False)
 
 
 def prepare_data(path):
-    '''Preparing data to modelling'''
+    '''Preparing data for modelling'''
     df = read_data(path)
     id_rating = df[['bookID', 'average_rating', 'title', 'ratings_count']]
-    # choose books which received above 1000 ratings
+    # Filter books which received above 1000 ratings
     id_rating = id_rating[id_rating['ratings_count'] >= POPULARITY_THRESHOLD]
-    # convert the table into a 2D matrix
+    # Pivot the table into a 2D matrix
     id_rating_pivot = id_rating.pivot(index='bookID', columns='title', values='average_rating').fillna(0)
     return id_rating_pivot
 
 
 def dimensionality_reduction(id_rating_pivot):
-    '''Calculating model and dimensionality reduction'''
-    # transpose the matrix 
+    '''Perform dimensionality reduction using Truncated SVD'''
+    # Transpose the matrix 
     X = id_rating_pivot.values.T
     # SVD model
     SVD = TruncatedSVD(n_components=NUM_COMPONENTS, random_state=17)
     matrix = SVD.fit_transform(X)
-    # calculating the Pearson’s R correlation coefficient 
+    # Calculate the Pearson's R correlation coefficient
     corr = np.corrcoef(matrix)
     return corr
     
 
 def matrix_factorization(name, data_path):
-    """The function enables to find the books that have high correlation coefficients 
-    (between 0.9 and 1.0) with chosen book and get the recommendations for it."""
+    """Find books highly correlated with the chosen book and recommend them"""
     id_rating_pivot = prepare_data(data_path)
     corr = dimensionality_reduction(id_rating_pivot)
     book_titles = id_rating_pivot.columns
