@@ -24,63 +24,43 @@ def read_data(path):
     return df
 
 
-'''The recommender system based on descriptions of books by TF-IDF method'''
-
-
-def cosine_sim(df):
+def compute_cosine_similarity_matrix(data, method='tfidf'):
     '''Function to computing the cosine similarity matrix'''
-    # creating the TF-IDF Matrix
-    tfidf = TfidfVectorizer(stop_words='english')
-    tfidf_matrix = tfidf.fit_transform(df['description'])
-    cosine = linear_kernel(tfidf_matrix, tfidf_matrix)
-    return cosine 
+    if method not in ['tfidf', 'count']:
+        raise ValueError("Invalid method. Choose either 'tfidf' or 'count'.")
+        
+    vectorizer = TfidfVectorizer(stop_words='english') if method == 'tfidf' else CountVectorizer(stop_words='english')
+    try:
+        matrix = vectorizer.fit_transform(data)
+    except Exception as e:
+        raise ValueError(f"Error during vectorization: {e}")
+
+    cosine_sim_matrix = linear_kernel(matrix, matrix) if method == 'tfidf' else cosine_similarity(matrix, matrix)
+    return cosine_sim_matrix
+        
 
 
-def get_recommendations(title):
+def get_recommendations(title, method='tfidf'):
     """Function takes the book title as an input and outputs are the similar books"""
     df = read_data(URL)
-    cosine_sim1 = cosine_sim(df)
-    # reverse map of indices and book titles:
-    indices = pd.Series(df.index, index=df['title']).drop_duplicates()
-    # creating recommendations
-    index = indices[title]
-    sim_score = list(enumerate(cosine_sim1[index]))
-    sim_score = sorted(sim_score, key=lambda x: x[1], reverse=True)
-    sim_score = sim_score[1:11]
-    book_indices = [i[0] for i in sim_score]
-    return df['title'].iloc[book_indices]
-
-
-'''The recommender system based on genres of books by Count Vectorizer method'''
- 
-
-def cosine_sim2(df):
-    '''Function to computing the cosine similarity matrix'''
-    # define a Count Vectorizer object
-    count = CountVectorizer(stop_words='english')
-    count_matrix = count.fit_transform(df['generes'])
-    # cosine similarity matrix based on the count matrix
-    cosine_sim = cosine_similarity(count_matrix, count_matrix)
-    return cosine_sim
+    if method == 'tfidf':
+        cosine_sim_matrix = compute_cosine_similarity_matrix(df['description'])
+    elif method == 'count':
+        cosine_sim_matrix = compute_cosine_similarity_matrix(df['generes'], method='count')
+    else:
+        raise ValueError("Invalid method. Please choose 'tfidf' or 'count'.")
     
-
-def get_recommendations2(title):
-    """Function takes the book title as an input and outputs are the similar books"""
-    df = read_data(URL)
-    cosine_sim1 = cosine_sim2(df)
-    # resetting index of main DataFrame and constructing reverse mapping
-    df3 = df.reset_index()
-    indices = pd.Series(df3.index, index=df3['title'])
-    # creating recommendations
+    indices = pd.Series(df.index, index=df['title']).drop_duplicates()
     index = indices[title]
-    sim_score = list(enumerate(cosine_sim1[index]))
-    sim_score = sorted(sim_score, key=lambda x: x[1], reverse=True)
-    sim_score = sim_score[1:11]
-    book_indices = [i[0] for i in sim_score]
+    sim_scores = list(enumerate(cosine_sim_matrix[index]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:11]
+    book_indices = [i[0] for i in sim_scores]
     return df['title'].iloc[book_indices]
 
 
 if __name__ == '__main__':
     title = input('Write your book name:\n')
-    print(get_recommendations(title))
-    print(get_recommendations2(title))
+    print("Recommendations based on TF-IDF:")
+    print(get_recommendations(title, method='tfidf'))
+    print("Recommendations based on Count Vectorizer:")
+    print(get_recommendations(title, method='count'))
