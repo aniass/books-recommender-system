@@ -25,7 +25,7 @@ def read_data(path):
 
 
 def compute_cosine_similarity_matrix(data, method='tfidf'):
-    '''Function to computing the cosine similarity matrix'''
+    '''Compute the cosine similarity matrix based on the chosen method'''
     if method not in ['tfidf', 'count']:
         raise ValueError("Invalid method. Choose either 'tfidf' or 'count'.")
         
@@ -41,7 +41,7 @@ def compute_cosine_similarity_matrix(data, method='tfidf'):
 
 
 def get_recommendations(title, method='tfidf'):
-    """Function takes the book title as an input and outputs are the similar books"""
+    """Get book recommendations based on the chosen method"""
     df = read_data(URL)
     if method == 'tfidf':
         cosine_sim_matrix = compute_cosine_similarity_matrix(df['description'])
