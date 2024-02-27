@@ -3,28 +3,23 @@
 import pandas as pd
 from sklearn import neighbors
 from sklearn.preprocessing import MinMaxScaler
-import warnings
-warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
-URL = 'Datasets\goodreads_book\books.csv'
+URL = r'C:\Python Scripts\Datasets\goodreads_book\books.csv'
+
+LANGUAGE_MAP = {
+    'eng': 'English', 'en-US': 'English', 'en-GB': 'English', 'enm': 'English', 'en-CA': 'English',
+    'fre': 'French', 'spa': 'Spanish', 'mul': 'Multiple language',
+    'grc': 'Greek', 'ger': 'German', 'jpn': 'Japanese', 'ara': 'Arabic',
+    'nl': 'Dutch', 'zho': 'Chinese', 'lat': 'Latvian', 'por': 'Portuguese',
+    'srp': 'Serbian', 'ita': 'Initial teaching language', 'rus': 'Russian', 'msa': 'Modern Standard Arabic',
+    'glg': 'Galician', 'wel': 'Welsh', 'swe': 'Swedish', 'tur': 'Murik', 'gla': 'Turkish', 'ale': 'Gaelic'
+}
 
 
 def clean_data(data):
     '''Function to clean data'''
-    data['language_code'].replace(to_replace=['eng', 'en-US', 'en-GB', 'enm', 'en-CA',
-                                        'fre', 'spa', 'mul', 'grc','ger',
-                                        'jpn', 'ara', 'nl', 'zho','lat', 'por','srp',
-                                        'ita', 'rus', 'msa', 'glg', 'wel', 'swe', 
-                                        'nor', 'tur','gla', 'ale'],
-                                 value=['English', 'English', 'English', 'English', 'English',
-                                        'French','Spanish','Multiple language',
-                                        'Greek','German','Japanese','Arabic',
-                                        'Dutch','Chinese','Latvian','Portuguese',
-                                        'Serbian','Initial teaching language',
-                                        'Russian','Modern Standard Arabic',
-                                        'Galician','Welsh','Swedish','Murik',
-                                        'Turkish','Gaelic','Afro-Asiatic'], inplace=True)
+    data['language_code'] = data['language_code'].map(LANGUAGE_MAP)
     return data
 
 
@@ -56,19 +51,21 @@ def preprocess_data(df):
     rating_df = pd.get_dummies(df['rating_between'])
     language_df = pd.get_dummies(df['language_code'])
     # connection the two data frames into one 
-    features = pd.concat([rating_df, 
-                      language_df, 
-                      df['average_rating'], 
-                      df['ratings_count']], axis=1)
+    features = pd.concat([
+            rating_df, 
+            language_df, 
+            df['average_rating'], 
+            df['ratings_count']
+    ], axis=1)
     return features
 
 
-def get_model(features):
+def get_model(features, n_neighbors=6):
     '''Calculating the model'''
     scaler = MinMaxScaler()
     feature = scaler.fit_transform(features)
     # calculating KNN model
-    model = neighbors.NearestNeighbors(n_neighbors=6, algorithm='auto')
+    model = neighbors.NearestNeighbors(n_neighbors=n_neighbors, algorithm='auto')
     model.fit(feature)
     distance, indices = model.kneighbors(feature)
     return distance, indices 
@@ -84,7 +81,7 @@ def make_recommendations(name):
     book_id = book_id[0]
     for newid in indices[book_id]:
         book_list.append(df.loc[newid].title)
-    print("Recommended books are:\n")
+    print("Recommendations by the book name:\n")
     for i in range(0,len(book_list)):
         print(f"{i+1}){book_list[i]}")
     
