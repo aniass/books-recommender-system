@@ -71,38 +71,33 @@ def get_model(features, n_neighbors=6):
     return distance, indices 
 
 
-def make_recommendations(name):
+def get_recommendations(name, by_author=False):
     """The function to get recommendations by name"""
     df = read_data(URL)
     features = preprocess_data(df)
     distance, indices = get_model(features)
-    book_list = []
-    book_id = df[df['title'] == name].index
-    book_id = book_id[0]
-    for newid in indices[book_id]:
-        book_list.append(df.loc[newid].title)
-    print("Recommendations by the book name:\n")
-    for i in range(0,len(book_list)):
-        print(f"{i+1}){book_list[i]}")
+    if by_author:
+        author_list = []
+        books=[]
+        author_id = df[df['authors'] == name].index
+        author_id = author_id[0]
+        for newid in indices[author_id]:
+            author_list.append(df.loc[newid].authors)
+            books.append(df.loc[newid].title)
+        print("Recommendations based on the author:\n")    
+        for i in range(0,len(author_list)):
+            print(f"{i+1})Author:{author_list[i]}, '{books[i]}'")
+    else:
+        book_list = []
+        book_id = df[df['title'] == name].index
+        book_id = book_id[0]
+        for newid in indices[book_id]:
+            book_list.append(df.loc[newid].title)
+        print("Recommendations by the book title:\n")
+        for i in range(0,len(book_list)):
+            print(f"{i+1}){book_list[i]}")
     
 
-def author_recommendations(author):
-    """The function to get recommendations by the author"""
-    df = read_data(URL)
-    features = preprocess_data(df)
-    distance, indices = get_model(features)
-    author_list = []
-    books=[]
-    author_id = df[df['authors'] == author].index
-    author_id = author_id[0]
-    for newid in indices[author_id]:
-        author_list.append(df.loc[newid].authors)
-        books.append(df.loc[newid].title)
-    print("Based the author recommended books are:\n")    
-    for i in range(0,len(author_list)):
-      print(f"{i+1})Author:{author_list[i]}, '{books[i]}'")
-
-
 if __name__ == '__main__':
-    make_recommendations("Jane Eyre")
-    author_recommendations("Dan Brown")
+    get_recommendations("Jane Eyre")
+    get_recommendations("Dan Brown", by_author=True)
