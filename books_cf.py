@@ -4,8 +4,8 @@ import pandas as pd
 from sklearn import neighbors
 from sklearn.preprocessing import MinMaxScaler
 
-
-URL = r'C:\Python Scripts\Datasets\goodreads_book\books.csv'
+# Constants
+URL = r'Datasets\goodreads_book\books.csv'
 
 LANGUAGE_MAP = {
     'eng': 'English', 'en-US': 'English', 'en-GB': 'English', 'enm': 'English', 'en-CA': 'English',
@@ -61,7 +61,7 @@ def preprocess_data(df):
 
 
 def get_model(features, n_neighbors=6):
-    '''Calculating the model'''
+    '''Calculating the KNN model'''
     scaler = MinMaxScaler()
     feature = scaler.fit_transform(features)
     # calculating KNN model
@@ -72,7 +72,7 @@ def get_model(features, n_neighbors=6):
 
 
 def get_recommendations(name, by_author=False):
-    """The function to get recommendations by name"""
+    """Get book recommendations based on the chosen method: by title or author"""
     df = read_data(URL)
     features = preprocess_data(df)
     distance, indices = get_model(features)
