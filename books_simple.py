@@ -11,9 +11,11 @@ TOP_N_BOOKS = 10
 def clean_data(data):
     '''Clean and preprocess data'''
     data.drop(['Unnamed: 0'], axis=1, inplace=True)
+    
     # Remove duplicates based on 'title'
     df = data.drop_duplicates(keep=False)
     df = df.drop_duplicates(['title'], keep='first')
+    
     # Remove commas, filling missing with 0 and convert to integer in the 'voters' column
     df['voters'] = df['voters'].replace(',','', regex=True).fillna(0).astype(int)
     return df
@@ -27,7 +29,7 @@ def read_data(path):
 
 
 def calculate_weighted_rating(df):
-    """Calculate and print recommendations based on Weighted Rating"""
+    '''Calculate and print recommendations based on Weighted Rating'''
     C = df['rating'].mean()
     m = df['voters'].quantile(MIN_VOTERS_PERCENTILE)
     V = df['voters']
