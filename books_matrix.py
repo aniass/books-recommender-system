@@ -45,7 +45,7 @@ def dimensionality_reduction(id_rating_pivot):
     
 
 def matrix_factorization(name, data_path):
-    """Find books highly correlated with the chosen book and recommend them"""
+    '''Find books highly correlated with the chosen book and recommend them'''
     id_rating_pivot = prepare_data(data_path)
     corr = dimensionality_reduction(id_rating_pivot)
     book_titles = id_rating_pivot.columns
