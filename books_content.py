@@ -41,7 +41,7 @@ def compute_cosine_similarity_matrix(data, method='tfidf'):
 
 
 def get_recommendations(title, method='tfidf'):
-    """Get book recommendations based on the chosen method"""
+    '''Get book recommendations based on the chosen method'''
     df = read_data(URL)
     if method == 'tfidf':
         cosine_sim_matrix = compute_cosine_similarity_matrix(df['description'])
