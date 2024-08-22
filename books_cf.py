@@ -31,7 +31,7 @@ def read_data(path):
 
 
 def create_rating(row):
-    """The function to create a column rating between"""
+    '''The function to create a column rating between'''
     if row >= 0 and row <=1:
         return '0-1'
     if row >= 1 and row <=2:
@@ -72,7 +72,7 @@ def get_model(features, n_neighbors=6):
 
 
 def get_recommendations(name, by_author=False):
-    """Get book recommendations based on the chosen method: by title or author"""
+    '''Get book recommendations based on the chosen method: by title or author'''
     df = read_data(URL)
     features = preprocess_data(df)
     distance, indices = get_model(features)
