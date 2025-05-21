@@ -11,13 +11,12 @@ In the analysis I have used two datasets come from Kaggle: [Goodreads books](htt
 The Recommendation System is based on previous (past) behaviours, it predicts the likelihood that a user would prefer an item. Many of applications for example Netflix uses recommendation system. It suggests people new movies according to their past activities that are like watching and voting movies. The purpose of a book recommendation system is to predict buyer’s interest and recommend books to them respectively. That system can take into regard many parameters like book content and quality by filtering user reviews. 
 
 ## Project contains:
-- Part 1: Books recommendation system by using simplest methods and content-based filtering - **books_content.ipynb**
-- Part 2: Books recommendation system by using collaborative filtering - **books_colaborative_filtering.ipynb**
+- **Part 1: Books recommendation system by simple methods and content-based filtering** - books_content.ipynb
+- **Part 2: Books recommendation system by using collaborative filtering** - books_colaborative_filtering.ipynb
 - Python script with the simple recommendation system - **books_simple.py** 
 - Python script with the recommendation system by content-based filtering method - **books_content.py**  
 - Python script with the recommendation system by collaborative filtering method - **books_cf.py**  
 - Python script with the recommendation system by matrix factorization method - **books_matrix.py**  
-
 
 ## Summary
 The main aim of this project was build book recommendation system. Based on analysis of two datasets (Goodreads books and Google Books) I have explored three kind of recommendations: the simplest recommendations, content-based filtering and collaborative filtering (KNN model and matrix factorization). I have started with data analysis to better meet the data. Then I have cleaned data and prepared them to the modelling.
